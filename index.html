@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TASUKI.go</title>
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  
+  <main class="container">
+    <div class="apple-card">
+        <header id="main-header" class="hidden">
+            <h1>TASUKI.go</h1>
+            <button id="back-to-title-btn" class="secondary-btn" style="padding: 8px 12px; font-size: 14px; border-radius: 10px;">🏠 タイトルへ</button>
+        </header>
+
+        <!-- タイトル画面 -->
+        <div id="title-screen" class="title-screen">
+            <h1 class="title-logo">TASUKI.go</h1>
+            <p class="title-subtitle">因数分解をゲーム感覚で極めよう！</p>
+            <div class="menu-buttons">
+                <button class="menu-btn" data-mode="intro">📖 やり方を学ぶ</button>
+                <button class="menu-btn" data-mode="practice">♾️ 練習モード (無限)</button>
+                <button class="menu-btn" data-mode="timeAttack">⏱️ タイムアタック (10問)</button>
+                <button class="menu-btn" data-mode="survival">❤️ サバイバル (HP3)</button>
+                <button class="menu-btn" data-mode="scoreAttack">🔥 スコアアタック (60秒)</button>
+            </div>
+        </div>
+
+
+        <!-- イントロダクション画面 -->
+        <div id="intro-container" class="intro-container hidden">
+            
+            <div id="intro-dots" class="intro-progress">
+            </div>
+
+            <p id="intro-step-desc" class="intro-step-desc"></p>
+            
+            <div class="intro-example-box">
+                <div class="intro-example-title">例: <span class="math-intro" style="color:var(--apple-blue);">3x^2 - 10x + 8</span> の場合</div>
+                
+                <div class="tasuki-grid-wrapper">
+                    <div class="tasuki-grid">
+                        <!-- 第一行 -->
+                        <div class="t-col step-el hidden-step" data-step="1" style="grid-row:1; grid-column:1;" id="intro-c1">3</div>
+                        <div class="t-col step-el hidden-step" data-step="1" style="grid-row:1; grid-column:3;" id="intro-c2">1</div>
+                        <div class="t-arrow step-el hidden-step" data-step="2" style="grid-row:1; grid-column:4;">→</div>
+                        <div class="t-col step-el hidden-step" data-step="2" style="grid-row:1; grid-column:5;" id="intro-res1">1</div>
+                        
+                        <!-- 第二行 -->
+                        <div class="t-col step-el hidden-step" data-step="1" style="grid-row:2; grid-column:1;" id="intro-c3">1</div>
+                        <div class="t-col step-el hidden-step" data-step="1" style="grid-row:2; grid-column:3;" id="intro-c4">8</div>
+                        <div class="t-arrow step-el hidden-step" data-step="2" style="grid-row:2; grid-column:4;">→</div>
+                        <div class="t-col step-el hidden-step" data-step="2" style="grid-row:2; grid-column:5;" id="intro-res2">24</div>
+
+                        <!-- クロス線 -->
+                        <div class="t-cross step-el hidden-step" data-step="2" style="grid-row:1 / span 2; grid-column:2;">
+                            <svg width="24" height="42" viewBox="0 0 24 42">
+                                <line x1="2" y1="8" x2="22" y2="38" stroke="#C7C7CC" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="2" y1="38" x2="22" y2="8" stroke="#C7C7CC" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+
+                        <!-- 計算結果行 -->
+                        <div class="t-res step-el highlight" id="intro-sum-box" data-step="2" style="grid-row:3; grid-column:5;">
+                            和:<span id="intro-sum-val">25</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="intro-final-answer step-el hidden-step" id="intro-final-answer" data-step="6">
+                    <span class="math-intro">(3x - 4)(x - 2)</span>
+                </div>
+            </div>
+            
+            <div class="intro-nav-btns" id="intro-nav-btns" style="gap: 8px;">
+                <button id="intro-prev-btn" class="secondary-btn" disabled style="padding: 14px 12px; font-size: 14px;">戻る</button>
+                <button id="intro-next-btn" class="primary-btn" style="flex:1;">次へ</button>
+                <button id="intro-trouble-btn" class="secondary-btn hidden-btn" style="flex:1; padding: 14px 6px; font-size: 13px;">うまくいかない時</button>
+                <button id="intro-practice-btn" class="primary-btn hidden-btn" style="flex:1; padding: 14px 6px; font-size: 13px; min-width: auto; margin: 0;">練習を始める</button>
+            </div>
+        </div>
+
+        <!-- 共通 UI -->
+        <div id="stats-container" class="stats-container"></div>
+        <div class="level-selector" id="level-selector-container">
+            <input type="radio" id="level-1" name="level" value="1" checked>
+            <label for="level-1">Basic<br><span style="font-size:10px; padding-top:2px; display:inline-block; font-weight:400; opacity:0.8;">(小さな数)</span></label>
+            <input type="radio" id="level-2" name="level" value="2">
+            <label for="level-2">Standard<br><span style="font-size:10px; padding-top:2px; display:inline-block; font-weight:400; opacity:0.8;">(標準)</span></label>
+            <input type="radio" id="level-3" name="level" value="3">
+            <label for="level-3">Advanced<br><span style="font-size:10px; padding-top:2px; display:inline-block; font-weight:400; opacity:0.8;">(大きな数)</span></label>
+        </div>
+
+        <div class="problem-container" id="problem-container">
+            <h2 class="prompt-text" id="prompt-text">次の方程式を因数分解しなさい</h2>
+            <div id="equation-display" class="equation"></div>
+        </div>
+
+        <div class="input-area" id="input-area">
+            <div class="factor-group">
+                <span class="bracket">(</span>
+                <input type="number" id="input-p" class="number-input" placeholder="p" autocomplete="off">
+                <span class="var-x">x</span>
+                <span class="plus-sign">+</span>
+                <input type="number" id="input-q" class="number-input" placeholder="q" autocomplete="off">
+                <span class="bracket">)</span>
+            </div>
+            <div class="factor-group">
+                <span class="bracket">(</span>
+                <input type="number" id="input-r" class="number-input" placeholder="r" autocomplete="off">
+                <span class="var-x">x</span>
+                <span class="plus-sign">+</span>
+                <input type="number" id="input-s" class="number-input" placeholder="s" autocomplete="off">
+                <span class="bracket">)</span>
+            </div>
+        </div>
+        <p class="hint" id="hint-text">※負の数の場合は <code>-3</code> のように入力してください</p>
+        <div class="actions" id="actions-container">
+            <button id="check-btn" class="primary-btn">判定する</button>
+        </div>
+        <div id="feedback-message" class="feedback hidden">正解！</div>
+    </div>
+    
+    <footer class="app-footer">
+        &copy; 2026 Toshiki Kamiya@Shizuoka Salesio
+    </footer>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
