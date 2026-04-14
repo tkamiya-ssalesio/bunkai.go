@@ -1,73 +1,46 @@
-# TASUKI.go ✖️
+# BUNKAI.go (v1.0.0)
 
-[日本語 (Japanese)](#日本語) | [English](#english)
+因数分解の「型」を完璧に見抜くための、トレーニング・プラットフォーム。
+
+## 🌟 BUNKAI.go とは？
+
+BUNKAI.go は、中学数学の基本から高校数学（数学II）の「たすき掛け」や「因数定理」まで、因数分解の全プロセスをパズル感覚でマスターできるWebアプリケーションです。
+
+単に数字を埋めるだけでなく、**「最初に適切な公式（型）を選択する」** というプロセスを設けることで、試験で役立つ「数式を見抜く直感」を養うことができます。
+
+## 🚀 主な機能
+
+### 1. 4つのステップ・カテゴリ
+学習進度に合わせて選べる4つのレベルを用意。
+- **🔰 中学復習**: $x^2 + (a+b)x + ab$ 型の基本トレーニング
+- **⚔️ たすきがけ**: $ax^2 + bx + c$ 型（係数あり）の標準トレーニング
+- **🔥 数学Ⅱ (公式)**: 3次の公式（和・差の3乗、3乗の和・差）の習得
+- **🌟 因数定理**: 因数定理を用いた一般の3次・4次式の高次方程式
+
+### 2. インタラクティブな解説（イントロダクション）
+各レベルにはアニメーション付きの解説モードを搭載。数学が苦手な生徒でも、ステップバイステップで解き方を理解できます。
+
+### 3. 多彩なゲームモード
+- **♾️ 練習モード**: 自分のペースで心ゆくまで解き続けるモード
+- **⏱️ タイムアタック**: 10問をどれだけ速く解けるか競うモード
+- **❤️ サバイバル**: 3つのライフでどこまで連続正解できるか挑戦するモード
+- **🔥 スコアアタック**: 1分間でコンボを繋いでハイスコアを目指すモード
+
+## 🛠 技術構成
+- **Frontend**: HTML5, CSS3 (Vanilla CSS), JavaScript (ES6+)
+- **Math Rendering**: [KaTeX](https://katex.org/)
+- **Visual Effects**: [Canvas Confetti](https://www.npmjs.com/package/canvas-confetti)
+- **Design Aesthetic**: Apple-inspired clean UI
+
+## 📂 インストール / 実行方法
+このリポジトリは静的ファイルのみで構成されているため、特別なサーバー設定なしで実行可能です。
+
+1. このリポジトリをクローンするか、ファイルをダウンロードします。
+2. ブラウザで `index.html` を開くだけでアプリが起動します。
+3. （推奨）GitHub Pages などにアップロードすることで、スマートフォンからも手軽にプレイ可能です。
+
+## 🎓 作者
+- **Toshiki Kamiya** (@Shizuoka Salesio)
 
 ---
-
-<a id="日本語"></a>
-## 🇯🇵 日本語
-
-**TASUKI.go** は、高校数学で学習する「たすきがけの因数分解 ($ax^2 + bx + c$) 」を、ゲーム感覚で直感的にマスターするための教育用Webアプリケーションです。生徒が「試行錯誤」の過程をポジティブに楽しめるように設計されています。
-
-### ✨ 主な機能
-
-*   📖 **やり方を学ぶ (インタラクティブ・チュートリアル)**
-    - アニメーション付きでたすきがけの仕組みを視覚化します。
-    - わざと間違えた例（符号ミス、数値ミスなど）と、そのリカバリー方法も実践形式で学べます。
-*   ♾️ **練習モード (無限)**
-    - 自分のペースでひたすら問題を解くモードです。難易度は3段階（Basic / Standard / Advanced）から選べます。
-*   ⏱️ **タイムアタック**
-    - 10問を解ききるまでのタイムを競うモードです。クリアするとS〜Cのランクが表示されます。
-*   ❤️ **サバイバル**
-    - ライフ（HP）3の状態で、ミスが許されない緊張感を味わいながらどこまで進めるかを競います。ステージ進行で難易度も上がります。
-*   🔥 **スコアアタック**
-    - 制限時間60秒以内にできるだけ多くのスコアを稼ぎます。連続正解でコンボボーナスが発生します！
-*   ⚡ **オートチェック機能**
-    - 4つの枠すべてに数字を入力した瞬間に自動で判定を行うため、テンポ良くプレイできます（ミスした後は修正できるように手動判定に切り替わります）。
-
-### 🚀 使い方
-
-特別なサーバーや環境構築は不要です。
-リポジトリ内の `index.html` をブラウザで直接開くか、GitHub Pages などでホスティングするだけで、スマートフォンやPCからすぐに利用できます。
-
-### 🛠️ 使用技術
-- HTML5 / CSS3 / Vanilla JavaScript
-- [KaTeX](https://katex.org/) (美しい数式レンダリングのため)
-- [canvas-confetti](https://github.com/catdad/canvas-confetti) (正解時の紙吹雪演出のため)
-
-**Author:** Toshiki Kamiya @ Shizuoka Salesio
-
----
-
-<a id="english"></a>
-## 🇺🇸 English
-
-**TASUKI.go** is a gamified web educational application designed to help high school students master the "Tasuki-gake" (criss-cross method) for factorizing quadratic equations of the form $ax^2 + bx + c$. It turns mathematical trial-and-error into an engaging puzzle game.
-
-### ✨ Key Features
-
-*   📖 **Interactive Tutorial**
-    - Visualizes the criss-cross factorization process step-by-step with smooth animations.
-    - Includes a dedicated troubleshooting section to handle common mistakes (wrong signs, incorrect factors, etc.).
-*   ♾️ **Infinite Practice Mode**
-    - Practice at your own pace. Automatically generates problems across three difficulty levels (Basic, Standard, Advanced).
-*   ⏱️ **Time Attack**
-    - Speedrun mode! Solve 10 problems as fast as possible and receive a rank based on your completion time.
-*   ❤️ **Survival Mode**
-    - Start with 3 HP. See how far you can go without making mistakes as the difficulty progressively increases.
-*   🔥 **Score Attack**
-    - A 60-second frantic mode where consecutive correct answers build up a combo multiplier for massive scores!
-*   ⚡ **Auto-Check System**
-    - Answers are automatically verified the moment all 4 input fields are filled, ensuring a snappy and seamless gameplay loop.
-
-### 🚀 Usage
-
-No build tools or backend servers are required. 
-Simply open `index.html` in any modern web browser or host it directly via GitHub Pages to start playing.
-
-### 🛠️ Tech Stack
-- HTML5 / CSS3 / Vanilla JavaScript
-- [KaTeX](https://katex.org/) (For high-quality math rendering)
-- [canvas-confetti](https://github.com/catdad/canvas-confetti) (For rewarding particle effects)
-
-**Author:** Toshiki Kamiya @ Shizuoka Salesio
+&copy; 2026 BUNKAI.go Project
