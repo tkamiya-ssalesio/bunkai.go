@@ -174,6 +174,9 @@ header.hidden {
   flex-direction: column;
   gap: 12px;
 }
+.intro-example-box.hidden {
+  display: none !important;
+}
 .intro-example-title {
   font-weight: 600;
   font-size: 16px;
@@ -351,7 +354,7 @@ header.hidden {
 }
 
 .equation {
-  font-size: 44px;
+  font-size: 34px;
   font-family: 'KaTeX_Math', 'Times New Roman', serif;
   margin: 16px 0;
   min-height: 60px;
@@ -359,6 +362,19 @@ header.hidden {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 8px 0;
+}
+/* 長い数式の場合に少し小さくする */
+.equation .katex-display {
+  margin: 0.5em 0;
+  font-size: 0.9em;
+}
+@media (max-width: 480px) {
+  .equation { font-size: 24px; }
+  .number-input { width: 44px; height: 44px; font-size: 18px; }
+  .bracket { font-size: 28px; }
 }
 
 .result-title {
@@ -391,10 +407,10 @@ header.hidden {
 .var-x, .plus-sign { font-size: 24px; font-weight: 400; margin: 0 8px; }
 
 .number-input {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   text-align: center;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   border: none;
   border-radius: 12px;
@@ -454,4 +470,46 @@ input[type=number] { -moz-appearance: textfield; }
   font-weight: 500;
   opacity: 0.8;
   letter-spacing: 0.5px;
+}
+
+/* --- Pattern Selector --- */
+.pattern-selector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+  animation: fadeIn 0.3s ease;
+}
+.pattern-selector.hidden { display: none; }
+.pattern-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-width: 440px;
+}
+.pattern-btn {
+  background-color: var(--apple-input-bg);
+  color: var(--apple-blue);
+  border: 2px solid transparent;
+  padding: 14px 0;
+  width: 200px;
+  font-size: 15px;
+  text-align: center;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.pattern-btn:hover { background-color: #E5E5EA; transform: scale(1.05); }
+.pattern-btn:active { transform: scale(0.95); }
+
+.exponent {
+  font-size: 24px;
+  font-weight: 700;
+  color: #C7C7CC;
+  margin-left: 2px;
+  align-self: flex-start;
+  margin-top: -6px;
 }

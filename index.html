@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TASUKI.go</title>
+  <title>BUNKAI.go</title>
   
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -16,21 +16,32 @@
   <main class="container">
     <div class="apple-card">
         <header id="main-header" class="hidden">
-            <h1>TASUKI.go</h1>
+            <h1>BUNKAI.go</h1>
             <button id="back-to-title-btn" class="secondary-btn" style="padding: 8px 12px; font-size: 14px; border-radius: 10px;">🏠 タイトルへ</button>
         </header>
 
         <!-- タイトル画面 -->
-        <div id="title-screen" class="title-screen">
-            <h1 class="title-logo">TASUKI.go</h1>
-            <p class="title-subtitle">因数分解をゲーム感覚で極めよう！</p>
-            <div class="menu-buttons">
-                <button class="menu-btn" data-mode="intro">📖 やり方を学ぶ</button>
-                <button class="menu-btn" data-mode="practice">♾️ 練習モード (無限)</button>
-                <button class="menu-btn" data-mode="timeAttack">⏱️ タイムアタック (10問)</button>
-                <button class="menu-btn" data-mode="survival">❤️ サバイバル (HP3)</button>
-                <button class="menu-btn" data-mode="scoreAttack">🔥 スコアアタック (60秒)</button>
+        <div id="category-screen" class="title-screen">
+            <h1 class="title-logo">BUNKAI.go</h1>
+            <p class="title-subtitle">因数分解の「型」を極めよう！</p>
+            <div class="menu-buttons" style="flex-direction: column;">
+                <button class="menu-btn category-btn" data-category="1">🔰 中学復習 (基本の2次式)</button>
+                <button class="menu-btn category-btn" data-category="2">⚔️ たすきがけ (標準の2次式)</button>
+                <button class="menu-btn category-btn" data-category="3">🔥 数学Ⅱ (3次式の公式)</button>
+                <button class="menu-btn category-btn" data-category="4">🌟 因数定理 (高次方程式)</button>
             </div>
+        </div>
+
+        <div id="mode-screen" class="title-screen hidden">
+            <h2 id="selected-category-title" style="margin-bottom: 24px; font-weight:700; color:var(--apple-text-primary);">🔰 中学復習</h2>
+            <div class="menu-buttons">
+                <button class="menu-btn mode-btn" data-mode="intro">📖 やり方を学ぶ</button>
+                <button class="menu-btn mode-btn" data-mode="practice">♾️ 練習モード</button>
+                <button class="menu-btn mode-btn" data-mode="timeAttack">⏱️ タイムアタック</button>
+                <button class="menu-btn mode-btn" data-mode="survival">❤️ サバイバル</button>
+                <button class="menu-btn mode-btn" data-mode="scoreAttack">🔥 スコアアタック</button>
+            </div>
+            <button id="back-to-category-btn" class="secondary-btn" style="margin-top:24px; font-size:14px; padding:10px 16px;">◀ カテゴリ選択へ戻る</button>
         </div>
 
 
@@ -42,9 +53,16 @@
 
             <p id="intro-step-desc" class="intro-step-desc"></p>
             
-            <div class="intro-example-box">
+            <div id="intro-visual-1" class="intro-example-box hidden">
+                <div class="intro-example-title">例: <span class="math-intro" style="color:var(--apple-blue);">x^2 - 2x - 8</span> の場合</div>
+                <div style="margin: 32px 0; text-align: center; font-size: 20px; line-height: 1.8;">
+                    <div id="intro-cat1-eq1"></div>
+                    <div id="intro-cat1-eq2" style="font-weight: 700; color:var(--apple-blue); margin-top: 16px; font-size: 26px;"></div>
+                </div>
+            </div>
+
+            <div id="intro-visual-2" class="intro-example-box">
                 <div class="intro-example-title">例: <span class="math-intro" style="color:var(--apple-blue);">3x^2 - 10x + 8</span> の場合</div>
-                
                 <div class="tasuki-grid-wrapper">
                     <div class="tasuki-grid">
                         <!-- 第一行 -->
@@ -73,9 +91,24 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="intro-final-answer step-el hidden-step" id="intro-final-answer" data-step="6">
                     <span class="math-intro">(3x - 4)(x - 2)</span>
+                </div>
+            </div>
+
+            <div id="intro-visual-3" class="intro-example-box hidden">
+                <div class="intro-example-title">公式の型を見抜く</div>
+                <div style="margin: 24px 0; text-align: center; font-size: 18px; line-height: 2;">
+                    <div id="intro-cat3-formula" style="font-size: 16px; margin-bottom: 20px;"></div>
+                    <div id="intro-cat3-example" style="font-size: 22px; color:var(--apple-text-primary);"></div>
+                    <div id="intro-cat3-answer" style="font-size: 26px; color:var(--apple-blue); font-weight:700; margin-top:20px;"></div>
+                </div>
+            </div>
+
+            <div id="intro-visual-4" class="intro-example-box hidden">
+                <div class="intro-example-title">因数定理で解を見つける</div>
+                <div style="margin: 32px 0; text-align: center; font-size: 20px; line-height: 1.8;">
+                    <div style="color:var(--apple-blue); font-weight:700;">f(a) = 0 となる a を探そう！</div>
                 </div>
             </div>
             
@@ -87,23 +120,34 @@
             </div>
         </div>
 
-        <!-- 共通 UI -->
         <div id="stats-container" class="stats-container"></div>
-        <div class="level-selector" id="level-selector-container">
-            <input type="radio" id="level-1" name="level" value="1" checked>
-            <label for="level-1">Basic<br><span style="font-size:10px; padding-top:2px; display:inline-block; font-weight:400; opacity:0.8;">(小さな数)</span></label>
-            <input type="radio" id="level-2" name="level" value="2">
-            <label for="level-2">Standard<br><span style="font-size:10px; padding-top:2px; display:inline-block; font-weight:400; opacity:0.8;">(標準)</span></label>
-            <input type="radio" id="level-3" name="level" value="3">
-            <label for="level-3">Advanced<br><span style="font-size:10px; padding-top:2px; display:inline-block; font-weight:400; opacity:0.8;">(大きな数)</span></label>
-        </div>
 
         <div class="problem-container" id="problem-container">
             <h2 class="prompt-text" id="prompt-text">次の方程式を因数分解しなさい</h2>
             <div id="equation-display" class="equation"></div>
         </div>
 
-        <div class="input-area" id="input-area">
+        <div id="pattern-selector" class="pattern-selector hidden">
+            <div class="pattern-buttons">
+                <!-- 中学向け -->
+                <button class="pattern-btn" data-cat="1" data-pattern="square" style="text-transform:none;">(x + a)²</button>
+                <button class="pattern-btn" data-cat="1" data-pattern="standard" style="text-transform:none;">(x + a)(x + b)</button>
+                <!-- たすきがけ向け -->
+                <button class="pattern-btn" data-cat="2" data-pattern="square" style="text-transform:none;">(ax + b)²</button>
+                <button class="pattern-btn" data-cat="2" data-pattern="standard" style="text-transform:none;">(ax + b)(cx + d)</button>
+                <!-- 数II向け -->
+                <button class="pattern-btn" data-cat="3" data-pattern="cube" style="text-transform:none;">(ax + b)³</button>
+                <button class="pattern-btn" data-cat="3" data-pattern="cubic-sum" style="text-transform:none;">(ax + b)(cx² + dx + e)</button>
+                <!-- 因数定理（高次）向け -->
+                <button class="pattern-btn" data-cat="4" data-pattern="three-lin" style="text-transform:none;">(ax+b)(cx+d)(ex+f)</button>
+                <button class="pattern-btn" data-cat="4" data-pattern="cubic-sum" style="text-transform:none;">(ax+b)(cx²+dx+e)</button>
+                <button class="pattern-btn" data-cat="4" data-pattern="four-lin" style="text-transform:none; font-size: 13px;">(ax+b)(cx+d)(ex+f)(gx+h)</button>
+                <button class="pattern-btn" data-cat="4" data-pattern="two-lin-one-quad" style="text-transform:none; font-size: 14px;">(ax+b)(cx+d)(ex²+fx+g)</button>
+                <button class="pattern-btn" data-cat="4" data-pattern="two-quad" style="text-transform:none;">(ax²+bx+c)(dx²+ex+f)</button>
+            </div>
+        </div>
+
+        <div class="input-area" id="input-area-standard">
             <div class="factor-group">
                 <span class="bracket">(</span>
                 <input type="number" id="input-p" class="number-input" placeholder="p" autocomplete="off">
@@ -121,6 +165,137 @@
                 <span class="bracket">)</span>
             </div>
         </div>
+
+        <div class="input-area" id="input-area-square">
+            <div class="factor-group">
+                <span class="bracket">(</span>
+                <input type="number" id="input-sq-p" class="number-input" placeholder="p" autocomplete="off">
+                <span class="var-x">x</span>
+                <span class="plus-sign">+</span>
+                <input type="number" id="input-sq-q" class="number-input" placeholder="q" autocomplete="off">
+                <span class="bracket">)</span>
+                <span class="exponent">²</span>
+            </div>
+        </div>
+        
+        <div class="input-area" id="input-area-cube">
+            <div class="factor-group">
+                <span class="bracket">(</span>
+                <input type="number" id="input-cb-p" class="number-input" placeholder="p" autocomplete="off">
+                <span class="var-x">x</span>
+                <span class="plus-sign">+</span>
+                <input type="number" id="input-cb-q" class="number-input" placeholder="q" autocomplete="off">
+                <span class="bracket">)</span>
+                <span class="exponent">³</span>
+            </div>
+        </div>
+
+        <div class="input-area" id="input-area-cubic-sum">
+            <div class="factor-group">
+                <span class="bracket">(</span>
+                <input type="number" id="input-cbs-p" class="number-input" placeholder="p" autocomplete="off">
+                <span class="var-x">x</span>
+                <span class="plus-sign">+</span>
+                <input type="number" id="input-cbs-q" class="number-input" placeholder="q" autocomplete="off">
+                <span class="bracket">)</span>
+            </div>
+            <div class="factor-group" style="margin-top:8px;">
+                <span class="bracket">(</span>
+                <input type="number" id="input-cbs-r" class="number-input" placeholder="c" autocomplete="off">
+                <span class="var-x" style="margin-right:2px;">x</span><span class="exponent" style="font-size:16px; margin-top:-2px; margin-right:6px;">²</span>
+                <span class="plus-sign">+</span>
+                <input type="number" id="input-cbs-s" class="number-input" placeholder="d" autocomplete="off">
+                <span class="var-x">x</span>
+                <span class="plus-sign">+</span>
+                <input type="number" id="input-cbs-t" class="number-input" placeholder="e" autocomplete="off">
+                <span class="bracket">)</span>
+            </div>
+        </div>
+
+        <div class="input-area" id="input-area-three-lin">
+            <div class="factor-group">
+                <span class="bracket">(</span>
+                <input type="number" id="input-3l-a" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-3l-b" class="number-input" autocomplete="off">
+                <span class="bracket">)</span>
+            </div>
+            <div class="factor-group">
+                <span class="bracket">(</span>
+                <input type="number" id="input-3l-c" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-3l-d" class="number-input" autocomplete="off">
+                <span class="bracket">)</span>
+            </div>
+            <div class="factor-group" style="margin-top:8px;">
+                <span class="bracket">(</span>
+                <input type="number" id="input-3l-e" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-3l-f" class="number-input" autocomplete="off">
+                <span class="bracket">)</span>
+            </div>
+        </div>
+
+        <div class="input-area" id="input-area-four-lin">
+            <div class="factor-group">
+                <span class="bracket">(</span><input type="number" id="input-4l-a" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-4l-b" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+            <div class="factor-group">
+                <span class="bracket">(</span><input type="number" id="input-4l-c" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-4l-d" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+            <div class="factor-group" style="margin-top:8px;">
+                <span class="bracket">(</span><input type="number" id="input-4l-e" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-4l-f" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+            <div class="factor-group" style="margin-top:8px;">
+                <span class="bracket">(</span><input type="number" id="input-4l-g" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-4l-h" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+        </div>
+
+        <div class="input-area" id="input-area-two-lin-one-quad">
+            <div class="factor-group">
+                <span class="bracket">(</span><input type="number" id="input-2l1q-a" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2l1q-b" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+            <div class="factor-group">
+                <span class="bracket">(</span><input type="number" id="input-2l1q-c" class="number-input" autocomplete="off">
+                <span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2l1q-d" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+            <div class="factor-group" style="margin-top:8px; width: 100%; justify-content: center;">
+                <span class="bracket">(</span>
+                <input type="number" id="input-2l1q-e" class="number-input" autocomplete="off">
+                <span class="var-x" style="margin-right:2px;">x</span><span class="exponent" style="font-size:16px; margin-top:-2px; margin-right:6px;">²</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2l1q-f" class="number-input" autocomplete="off"><span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2l1q-g" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+        </div>
+
+        <div class="input-area" id="input-area-two-quad">
+            <div class="factor-group" style="margin-top:8px;">
+                <span class="bracket">(</span>
+                <input type="number" id="input-2q-a" class="number-input" autocomplete="off">
+                <span class="var-x" style="margin-right:2px;">x</span><span class="exponent" style="font-size:16px; margin-top:-2px; margin-right:6px;">²</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2q-b" class="number-input" autocomplete="off"><span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2q-c" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+            <div class="factor-group" style="margin-top:8px;">
+                <span class="bracket">(</span>
+                <input type="number" id="input-2q-d" class="number-input" autocomplete="off">
+                <span class="var-x" style="margin-right:2px;">x</span><span class="exponent" style="font-size:16px; margin-top:-2px; margin-right:6px;">²</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2q-e" class="number-input" autocomplete="off"><span class="var-x">x</span><span class="plus-sign">+</span>
+                <input type="number" id="input-2q-f" class="number-input" autocomplete="off"><span class="bracket">)</span>
+            </div>
+        </div>
+
         <p class="hint" id="hint-text">※負の数の場合は <code>-3</code> のように入力してください</p>
         <div class="actions" id="actions-container">
             <button id="check-btn" class="primary-btn">判定する</button>
@@ -129,7 +304,7 @@
     </div>
     
     <footer class="app-footer">
-        &copy; 2026 Toshiki Kamiya@Shizuoka Salesio
+        &copy; 2026 Toshiki Kamiya @ Shizuoka Salesio | v1.0.0
     </footer>
   </main>
 
