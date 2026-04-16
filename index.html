@@ -297,14 +297,19 @@
         </div>
 
         <p class="hint" id="hint-text">※負の数の場合は <code>-3</code> のように入力してください</p>
-        <div class="actions" id="actions-container">
+        <div class="actions" id="actions-container" style="flex-direction: column; gap: 12px; align-items: center;">
+            <label id="auto-check-toggle" class="hidden" style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--apple-text-secondary); cursor:pointer; user-select: none;">
+                <input type="checkbox" id="auto-check-checkbox" style="width: 18px; height: 18px; accent-color: var(--apple-blue); cursor:pointer;"> 
+                自動採点
+            </label>
             <button id="check-btn" class="primary-btn">判定する</button>
+            <button id="back-to-pattern-btn" class="secondary-btn hidden" style="background-color: transparent; color: var(--apple-text-secondary); border: 1px solid var(--apple-text-secondary); width: 100%; max-width: 340px; margin-top: 4px;">◀ 型を選び直す</button>
         </div>
         <div id="feedback-message" class="feedback hidden">正解！</div>
     </div>
     
     <footer class="app-footer">
-        &copy; 2026 Toshiki Kamiya @ Shizuoka Salesio | v1.0.0
+        &copy; 2026 Toshiki Kamiya @ Shizuoka Salesio | v1.1.0
     </footer>
   </main>
 

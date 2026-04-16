@@ -27,6 +27,7 @@ let saTimeLeft = 60;
 let saCombo = 0;
 let saTimerInterval = null;
 let autoCheckEnabled = true;
+let userRequestedPatternSelect = false;
 
 // Intro States (Refactored for Basic First then Trouble)
 let currentIntroStep = 1;
@@ -82,6 +83,7 @@ const problemContainer = document.getElementById('problem-container');
 const statsContainer = document.getElementById('stats-container');
 const promptText = document.getElementById('prompt-text');
 const patternSelector = document.getElementById('pattern-selector');
+const backToPatternBtn = document.getElementById('back-to-pattern-btn');
 
 const introVisual1 = document.getElementById('intro-visual-1');
 const introCat1Eq1 = document.getElementById('intro-cat1-eq1');
@@ -101,6 +103,8 @@ const inputAreaCube = document.getElementById('input-area-cube');
 const inputAreaCubicSum = document.getElementById('input-area-cubic-sum');
 const hintText = document.getElementById('hint-text');
 const actionsContainer = document.getElementById('actions-container');
+const autoCheckToggle = document.getElementById('auto-check-toggle');
+const autoCheckCheckbox = document.getElementById('auto-check-checkbox');
 const equationDisplay = document.getElementById('equation-display');
 
 const introStepDesc = document.getElementById('intro-step-desc');
@@ -325,21 +329,41 @@ function generateProblem() {
     }
     
     if (currentMode !== MODES.INTRO && currentMode !== MODES.CATEGORY_SELECT && currentMode !== MODES.MODE_SELECT && !isGameOver) {
-        patternSelector.classList.remove('hidden');
-        inputAreaStandard.classList.add('hidden');
-        inputAreaSquare.classList.add('hidden');
-        inputAreaCube.classList.add('hidden');
-        inputAreaCubicSum.classList.add('hidden');
-        inputAreaThreeLin.classList.add('hidden');
-        inputAreaFourLin.classList.add('hidden');
-        inputAreaTwoLinOneQuad.classList.add('hidden');
-        inputAreaTwoQuad.classList.add('hidden');
-        actionsContainer.classList.add('hidden');
-        hintText.classList.add('hidden');
+        if (!userRequestedPatternSelect) {
+            patternSelector.classList.remove('hidden');
+            inputAreaStandard.classList.add('hidden');
+            inputAreaSquare.classList.add('hidden');
+            inputAreaCube.classList.add('hidden');
+            inputAreaCubicSum.classList.add('hidden');
+            inputAreaThreeLin.classList.add('hidden');
+            inputAreaFourLin.classList.add('hidden');
+            inputAreaTwoLinOneQuad.classList.add('hidden');
+            inputAreaTwoQuad.classList.add('hidden');
+            actionsContainer.classList.add('hidden');
+            hintText.classList.add('hidden');
+            backToPatternBtn.classList.add('hidden');
+        } else {
+            // パターン選択済みの場合はそのまま入力エリア表示を想定
+            actionsContainer.classList.remove('hidden');
+        }
     }
     
     displayEquation(currentProblem);
-    autoCheckEnabled = true;
+    
+    // ゲームモードは常に自動判定、練習モードはチェックボックスに依存
+    if (currentMode === MODES.PRACTICE) {
+        autoCheckEnabled = autoCheckCheckbox.checked;
+        autoCheckToggle.classList.remove('hidden');
+        if (autoCheckEnabled) {
+            checkBtn.classList.add('hidden');
+        } else {
+            checkBtn.classList.remove('hidden');
+        }
+    } else {
+        autoCheckEnabled = true;
+        autoCheckToggle.classList.add('hidden');
+        checkBtn.classList.add('hidden');
+    }
 }
 
 function displayEquation(prob) {
@@ -369,6 +393,7 @@ function displayEquation(prob) {
 function startMode() {
     isGameOver = false;
     isAnimating = false;
+    userRequestedPatternSelect = false;
     clearInterval(taTimerInterval);
     clearInterval(saTimerInterval);
     resetInputs();
@@ -392,6 +417,7 @@ function startMode() {
         patternSelector.classList.add('hidden');
         hintText.classList.add('hidden');
         actionsContainer.classList.add('hidden');
+        backToPatternBtn.classList.add('hidden');
         return;
     }
 
@@ -413,6 +439,7 @@ function startMode() {
         patternSelector.classList.add('hidden');
         hintText.classList.add('hidden');
         actionsContainer.classList.add('hidden');
+        backToPatternBtn.classList.add('hidden');
         
         let titleText = "🔰 中学復習";
         if (currentCategory === 2) titleText = "⚔️ たすきがけ";
@@ -447,6 +474,7 @@ function startMode() {
         hintText.classList.add('hidden');
         actionsContainer.classList.add('hidden');
         patternSelector.classList.add('hidden');
+        backToPatternBtn.classList.add('hidden');
         currentIntroStep = 1;
         renderIntroStep(currentIntroStep);
         return;
@@ -462,6 +490,7 @@ function startMode() {
     hintText.classList.add('hidden');
     actionsContainer.classList.add('hidden');
     patternSelector.classList.remove('hidden');
+    backToPatternBtn.classList.add('hidden');
     
     promptText.textContent = "次の方程式を因数分解しなさい";
     checkBtn.textContent = "判定する";
@@ -673,8 +702,10 @@ function checkAnswer() {
     // ① すべての入力が終わった段階で、まずは「型（パターン）」が合っているか判定する
     if (currentSelectedPattern !== currentProblem.pattern) {
         showFeedback("型が違います！", "error");
-        autoCheckEnabled = false;
-        actionsContainer.classList.add('hidden');
+        // サクサクモードならボタンを隠す状態を維持したいが、再入力を促す。
+        if (!autoCheckEnabled) {
+             actionsContainer.classList.remove('hidden');
+        }
         setTimeout(() => {
             if (!isGameOver) {
                 hideFeedback();
@@ -688,9 +719,11 @@ function checkAnswer() {
                 inputAreaTwoLinOneQuad.classList.add('hidden');
                 inputAreaTwoQuad.classList.add('hidden');
                 hintText.classList.add('hidden');
+                actionsContainer.classList.add('hidden');
                 patternSelector.classList.remove('hidden');
+                backToPatternBtn.classList.add('hidden');
                 resetInputs();
-                autoCheckEnabled = true;
+                userRequestedPatternSelect = false;
             }
         }, 1500);
         return;
@@ -770,8 +803,9 @@ function handleCorrect() {
 }
 
 function handleIncorrect(customMsg = "不正解…") {
-    autoCheckEnabled = false;
-    actionsContainer.classList.remove('hidden');
+    if (!autoCheckEnabled) {
+        actionsContainer.classList.remove('hidden');
+    }
     if (currentMode === MODES.PRACTICE) { practiceStreak = 0; showFeedback(customMsg, "error"); }
     else if (currentMode === MODES.TIME_ATTACK) { taStartTime -= 3000; showFeedback(customMsg + " +3秒ペナルティ", "error"); }
     else if (currentMode === MODES.SURVIVAL) {
@@ -855,6 +889,24 @@ backToTitleBtn.addEventListener('click', () => {
     currentMode = MODES.CATEGORY_SELECT;
     startMode();
 });
+
+backToPatternBtn.addEventListener('click', () => {
+    if (isGameOver || isAnimating) return;
+    inputAreaStandard.classList.add('hidden');
+    inputAreaSquare.classList.add('hidden');
+    inputAreaCube.classList.add('hidden');
+    inputAreaCubicSum.classList.add('hidden');
+    inputAreaThreeLin.classList.add('hidden');
+    inputAreaFourLin.classList.add('hidden');
+    inputAreaTwoLinOneQuad.classList.add('hidden');
+    inputAreaTwoQuad.classList.add('hidden');
+    hintText.classList.add('hidden');
+    actionsContainer.classList.add('hidden');
+    patternSelector.classList.remove('hidden');
+    backToPatternBtn.classList.add('hidden');
+    resetInputs();
+    userRequestedPatternSelect = false;
+});
 patternBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
         if (isGameOver || isAnimating) return;
@@ -881,7 +933,49 @@ patternBtns.forEach(btn => {
         else if (chosen === 'two-lin-one-quad') inputsTwoLinOneQuad[0].focus();
         else if (chosen === 'two-quad') inputsTwoQuad[0].focus();
         else inputP.focus();
+        
+        userRequestedPatternSelect = true;
+        
+        actionsContainer.classList.remove('hidden');
+        backToPatternBtn.classList.remove('hidden');
+        if (currentMode === MODES.PRACTICE) {
+            autoCheckToggle.classList.remove('hidden');
+            if (autoCheckCheckbox.checked) {
+                checkBtn.classList.add('hidden');
+            } else {
+                checkBtn.classList.remove('hidden');
+            }
+        } else {
+            autoCheckToggle.classList.add('hidden');
+            checkBtn.classList.add('hidden');
+        }
     });
+});
+
+autoCheckCheckbox.addEventListener('change', (e) => {
+    autoCheckEnabled = e.target.checked;
+    if (autoCheckEnabled) {
+        checkBtn.classList.add('hidden');
+        // On turning auto-check ON, maybe trigger check if all filled
+        let allFilled = true;
+        let activeInputs;
+        if (currentSelectedPattern === 'square') activeInputs = inputsSquare;
+        else if (currentSelectedPattern === 'standard') activeInputs = inputsStandard;
+        else if (currentSelectedPattern === 'cube') activeInputs = inputsCube;
+        else if (currentSelectedPattern === 'cubic-sum') activeInputs = inputsCubicSum;
+        else if (currentSelectedPattern === 'three-lin') activeInputs = inputsThreeLin;
+        else if (currentSelectedPattern === 'four-lin') activeInputs = inputsFourLin;
+        else if (currentSelectedPattern === 'two-lin-one-quad') activeInputs = inputsTwoLinOneQuad;
+        else if (currentSelectedPattern === 'two-quad') activeInputs = inputsTwoQuad;
+        else return;
+
+        if (activeInputs) {
+             activeInputs.forEach(i => { if (isNaN(parseInt(i.value))) allFilled = false; });
+             if (allFilled && !isGameOver && !isAnimating) checkAnswer();
+        }
+    } else {
+        checkBtn.classList.remove('hidden');
+    }
 });
 
 const bindInputListeners = (inputsList) => {
